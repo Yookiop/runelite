@@ -53,6 +53,10 @@ public class ShiftHotkeyManager
 	public boolean isPressed()
 	{
 		final Keybind hotkey = config.shiftHotkey();
+		if (hotkey == null)
+		{
+			return client.isKeyPressed(KeyCode.KC_SHIFT);
+		}
 		if (Keybind.NOT_SET.equals(hotkey))
 		{
 			return false;
