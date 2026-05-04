@@ -32,6 +32,8 @@ import net.runelite.api.Client;
 import net.runelite.api.KeyCode;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.RuneLiteConfig;
+import net.runelite.client.input.KeyListener;
+import net.runelite.client.input.KeyManager;
 
 /**
  * Tracks whether the configurable "shift hotkey" is currently pressed.
@@ -39,19 +41,62 @@ import net.runelite.client.config.RuneLiteConfig;
  * via the RuneLite "Shift hotkey" setting under Overlay settings.
  */
 @Singleton
-public class ShiftHotkeyManager
+public class ShiftHotkeyManager implements KeyListener
 {
-	@Inject
-	private Client client;
+	private final Client client;
+	private final RuneLiteConfig config;
+
+	private boolean active;
 
 	@Inject
-	private RuneLiteConfig config;
+	private ShiftHotkeyManager(Client client, RuneLiteConfig config, KeyManager keyManager)
+	{
+		this.client = client;
+		this.config = config;
+		keyManager.registerKeyListener(this);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		Keybind hotkey = config.shiftHotkey();
+		if (hotkey != null && hotkey.matches(e))
+		{
+			active = true;
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+		Keybind hotkey = config.shiftHotkey();
+		if (hotkey != null && hotkey.matches(e))
+		{
+			active = false;
+		}
+	}
+
+	@Override
+	public void focusLost()
+	{
+		active = false;
+	}
 
 	/**
 	 * Returns true if the configured shift hotkey is currently held down.
 	 */
 	public boolean isPressed()
 	{
+		if (active)
+		{
+			return true;
+		}
+
 		final Keybind hotkey = config.shiftHotkey();
 		if (hotkey == null)
 		{
