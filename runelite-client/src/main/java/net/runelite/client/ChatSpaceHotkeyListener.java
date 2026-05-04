@@ -77,6 +77,15 @@ public class ChatSpaceHotkeyListener implements KeyListener
 			return;
 		}
 
+		// If Space is pressed but the hotkey is remapped to something else, suppress the original Space
+		if (e.getKeyCode() == KeyEvent.VK_SPACE
+			&& config.spaceHotkey().getKeyCode() != KeyEvent.VK_SPACE)
+		{
+			blockedChars.add(' ');
+			e.consume();
+			return;
+		}
+
 		if (config.spaceHotkey().matches(e))
 		{
 			final int mappedKeyCode = KeyEvent.VK_SPACE;
@@ -103,6 +112,11 @@ public class ChatSpaceHotkeyListener implements KeyListener
 		if (keyChar != KeyEvent.CHAR_UNDEFINED)
 		{
 			blockedChars.remove(keyChar);
+		}
+		// Ensure blocked space char is always cleaned up when Space is released
+		if (keyCode == KeyEvent.VK_SPACE)
+		{
+			blockedChars.remove(' ');
 		}
 
 		final Integer mappedKeyCode = modified.remove(keyCode);

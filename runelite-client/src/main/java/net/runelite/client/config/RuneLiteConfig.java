@@ -483,7 +483,7 @@ public interface RuneLiteConfig extends Config
 
 	@ConfigItem(
 		keyName = "shiftHotkey",
-		name = "Shift hotkey",
+		name = "Shift action hotkey",
 		description = "Configures the hotkey used instead of Shift for actions like marking tiles and menu entry swapping.",
 		position = 53
 	)
@@ -494,7 +494,7 @@ public interface RuneLiteConfig extends Config
 
 	@ConfigItem(
 		keyName = "spaceHotkey",
-		name = "Space hotkey",
+		name = "Click here to continue hotkey",
 		description = "Configures the key used to continue chat dialogs (\"Click here to continue\"). Does not affect typing.",
 		position = 54
 	)
